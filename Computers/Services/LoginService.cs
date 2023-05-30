@@ -55,6 +55,12 @@ namespace Computers.Services
             {
                 return new ErrorDto("Login or password, or repeted password is empty");
             }
+
+            var user = await _repository.GetAsync(u => u.Login == model.Login);
+            if (user != null)
+            {
+                return new ErrorDto("Login is already employed");
+            }
             if (model.Password != model.RepetedPassword)
             {
                 return new ErrorDto($"Password not equal to repeted password");
@@ -64,7 +70,7 @@ namespace Computers.Services
                 return new ErrorDto("Role uncorrect, must be Admin or User");
             }
 
-            var user = new User()
+            user = new User()
             {
                 Login = model.Login,
                 Role = model.Role,
